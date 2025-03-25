@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanex Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #1E3A8A;
+            --light-blue: #3B82F6;
+            --text: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: #0F172A;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #home-page, #login-page, #academy-page, #student-register {
+            display: none;
+        }
+
+        #home-page.active, #login-page.active, #academy-page.active, #student-register.active {
+            display: block;
+            width: 100%;
+        }
+
+        .login-container, .register-container {
+            background: var(--dark-blue);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-container h1, .register-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .login-container input, .register-container input, .register-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
+
+        .login-container button, .register-container button {
+            padding: 10px 20px;
+            background: var(--light-blue);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+        }
+
+        .login-container button:hover, .register-container button:hover {
+            background: #2563EB;
+        }
+
+        .section { padding: 60px 20px; min-height: 100vh; }
+        .hero-container {
+            position: relative;
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--dark-blue), var(--light-blue));
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .hero-container img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px var(--light-blue));
+            animation: pulseGlow 2s infinite;
+            transition: transform 0.3s;
+        }
+        .hero-container img:hover {
+            transform: scale(1.1);
+        }
+        .hero-container h1 {
+            font-size: 4em;
+            color: var(--text);
+            text-shadow: 0 0 15px var(--light-blue), 0 0 30px rgba(59, 130, 246, 0.5);
+            animation: textGlow 2s infinite alternate;
+        }
+        .hero-container p {
+            font-size: 1.8em;
+            color: var(--text);
+            animation: slideUp 1s ease-in;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(30, 58, 138, 0.1));
+            z-index: 0;
+        }
+        .login-btn {
+            padding: 15px 30px;
+            background: var(--light-blue);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.2em;
+            margin-top: 20px;
+            box-shadow: 0 0 10px var(--light-blue);
+        }
+        .login-btn:hover {
+            background: #2563EB;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px var(--light-blue);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--dark-blue);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .hamburger { display: none; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: var(--text); margin: 5px 0; transition: 0.4s; }
+        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { color: var(--text); padding: 12px 20px; text-decoration: none; border-radius: 5px; transition: 0.3s; }
+        .nav-links a:hover { background: var(--light-blue); transform: translateY(-2px); }
+
+        #ai-features, #lms, #blogs, #students {
+            background: var(--dark-blue);
+            color: var(--text);
+            text-align: center;
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        #ai-features ul { list-style: none; padding: 0; }
+        #ai-features li { margin: 10px 0; }
+
+        #lms table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        #lms th, #lms td { border: 1px solid rgba(255,255,255,0.2); padding: 8px; text-align: left; }
+        #lms th { background: rgba(255,255,255,0.1); }
+        .pdf-viewer { max-height: 300px; overflow: auto; margin-top: 20px; background: rgba(0,0,0,0.2); }
+        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin: 2px; }
+        .view-btn, .download-btn { background: var(--light-blue); color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin: 2px; }
+
+        .blog-post { background: rgba(255,255,255,0.1); padding: 20px; margin: 20px 0; border-radius: 10px; }
+
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--light-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: float 3s infinite;
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: var(--dark-blue);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-header { background: var(--light-blue); color: white; padding: 10px; display: flex; justify-content: flex-end; }
+        .chat-header button { background: none; border: none; color: white; cursor: pointer; }
+        #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; background: rgba(255,255,255,0.05); }
+        #chat-input { width: 100%; padding: 10px; border: none; border-top: 1px solid rgba(255,255,255,0.2); box-sizing: border-box; background: var(--dark-blue); color: var(--text); }
+
+        .user-msg { background: var(--light-blue); color: white; padding: 5px 10px; border-radius: 5px; margin: 5px 0; text-align: right; }
+        .ai-msg { background: rgba(255,255,255,0.1); color: var(--text); padding: 5px 10px; border-radius: 5px; margin: 5px 0; }
+
+        .animated-button { padding: 10px 20px; background: var(--light-blue); border: none; border-radius: 5px; color: white; cursor: pointer; transition: 0.3s; }
+        .animated-button:hover { background: #2563EB; }
+
+        .subject-card, .stream-card {
+            background: linear-gradient(135deg, var(--dark-blue), var(--light-blue));
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .subject-card:hover, .stream-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 35px rgba(59, 130, 246, 0.6);
+        }
+        .card-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .subject-card:hover .card-glow, .stream-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        .team-card {
+            background: var(--dark-blue);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .team-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+        }
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, var(--light-blue), #2563EB);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+            transition: transform 0.4s;
+            object-fit: cover;
+        }
+        .team-card:hover img {
+            transform: scale(1.1);
+        }
+        .neon-border {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            border: 3px solid var(--light-blue);
+            border-radius: 25px;
+            opacity: 0.5;
+            animation: neonPulse 2s infinite alternate;
+        }
+
+        #quiz-section {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #quiz-section input { margin: 10px 0; padding: 8px; width: 100%; }
+        #quiz-result { margin-top: 10px; color: var(--light-blue); }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes textGlow { 0% { text-shadow: 0 0 10px var(--light-blue); } 100% { text-shadow: 0 0 20px var(--light-blue); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes neonPulse { 0% { opacity: 0.5; } 100% { opacity: 0.8; } }
+        @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 5px var(--light-blue)); } 50% { filter: drop-shadow(0 0 15px var(--light-blue)); } 100% { filter: drop-shadow(0 0 5px var(--light-blue)); } }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 60px; right: 0; background: var(--dark-blue); flex-direction: column; width: 100%; }
+            .nav-links.active { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page (Initial View) -->
+    <div id="home-page" class="active">
+        <div class="section" data-aos="fade-up">
+            <div class="hero-container">
+                <img src="C:\Users\User\OneDrive\Desktop\LOGOS\Untitled-1.11.png" alt="Shanex Academy Logo">
+                <h1>Welcome to Shanex Academy</h1>
+                <p>Learn Different, Lead Better</p>
+                <button class="login-btn" onclick="showLoginPage()">Shanex Academy Login</button>
+                <div class="hero-overlay"></div>
+            </div>
+
+            <div class="about-section" style="margin: 60px auto; max-width: 900px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h2 style="color: var(--light-blue); font-size: 2.5em; margin-bottom: 20px;">About Shanex Academy</h2>
+                <p style="font-size: 1.2em;">Shanex Academy is dedicated to empowering Ordinary Level (O/L) and Advanced Level (A/L) students with quality education. We offer a wide range of subjects and streams to help students excel in their academic journey.</p>
+                <p style="font-size: 1.1em; margin-top: 10px;"><strong style="color: var(--light-blue);">Focus:</strong> O/L and A/L Students</p>
+            </div>
+
+            <div class="subjects-section" style="margin: 60px auto; max-width: 1200px; padding: 40px;">
+                <h3 style="text-align: center; color: var(--light-blue); font-size: 2.5em; margin-bottom: 40px; text-shadow: 0 0 10px var(--light-blue);">Ordinary Level Subjects</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="subject-card"><i class="fas fa-language" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Sinhala</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-globe" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">English</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-pray" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Religion</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-history" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">History</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-flask" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Science</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-calculator" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Maths</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-coins" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Commerce</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-language" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Tamil</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-paint-brush" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Arts</p><div class="card-glow"></div></div>
+                    <div class="subject-card"><i class="fas fa-music" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><p style="font-size: 1.2em; color: var(--text);">Music</p><div class="card-glow"></div></div>
+                </div>
+
+                <h3 style="text-align: center; color: var(--light-blue); font-size: 2.5em; margin: 60px 0 40px; text-shadow: 0 0 10px var(--light-blue);">Advanced Level Streams and Subjects</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+                    <div class="stream-card"><i class="fas fa-theater-masks" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><strong style="color: var(--text); font-size: 1.5em; display: block; margin-bottom: 15px; text-shadow: 0 0 5px var(--light-blue);">Arts Stream</strong><ul style="list-style-type: disc; padding-left: 20px; color: var(--text);"><li>Sinhala</li><li>Econ</li><li>Music</li><li>Logic</li><li>ICT</li></ul><div class="card-glow"></div></div>
+                    <div class="stream-card"><i class="fas fa-briefcase" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><strong style="color: var(--text); font-size: 1.5em; display: block; margin-bottom: 15px; text-shadow: 0 0 5px var(--light-blue);">Commerce Stream</strong><ul style="list-style-type: disc; padding-left: 20px; color: var(--text);"><li>Econ</li><li>Accounting</li><li>Business Studies</li><li>ICT</li></ul><div class="card-glow"></div></div>
+                    <div class="stream-card"><i class="fas fa-cogs" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><strong style="color: var(--text); font-size: 1.5em; display: block; margin-bottom: 15px; text-shadow: 0 0 5px var(--light-blue);">Tech Stream</strong><ul style="list-style-type: disc; padding-left: 20px; color: var(--text);"><li>ICT</li><li>ET</li><li>SFT</li><li>BST</li></ul><div class="card-glow"></div></div>
+                    <div class="stream-card"><i class="fas fa-leaf" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><strong style="color: var(--text); font-size: 1.5em; display: block; margin-bottom: 15px; text-shadow: 0 0 5px var(--light-blue);">Bio Stream</strong><ul style="list-style-type: disc; padding-left: 20px; color: var(--text);"><li>Biology</li><li>Chemistry</li><li>Physics</li><li>ICT</li><li>Agri</li></ul><div class="card-glow"></div></div>
+                    <div class="stream-card"><i class="fas fa-ruler-combined" style="font-size: 2em; color: var(--text); margin-bottom: 15px;"></i><strong style="color: var(--text); font-size: 1.5em; display: block; margin-bottom: 15px; text-shadow: 0 0 5px var(--light-blue);">Maths Stream</strong><ul style="list-style-type: disc; padding-left: 20px; color: var(--text);"><li>Combined Maths</li><li>Chemistry</li><li>Physics</li><li>ICT</li></ul><div class="card-glow"></div></div>
+                </div>
+            </div>
+
+            <div class="team-section" style="margin: 60px auto; max-width: 1200px; padding: 40px;">
+                <h3 style="text-align: center; color: var(--light-blue); font-size: 2.5em; margin-bottom: 40px; text-shadow: 0 0 10px var(--light-blue);">Our Management Team</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                    <div class="team-card"><img src="path/to/shanaka-perera.jpg" alt="Shanaka Perera"><h4 style="color: var(--light-blue); font-size: 1.5em; margin: 0 0 10px; text-shadow: 0 0 5px var(--light-blue);">Mr. Shanaka Perera</h4><p style="font-size: 1.2em; color: var(--text);">Owner & Director</p><p style="font-size: 1em; color: rgba(255, 255, 255, 0.8); font-style: italic;">MBA, B.Ed</p><div class="neon-border"></div></div>
+                    <div class="team-card"><img src="path/to/nimali-silva.jpg" alt="Nimali Silva"><h4 style="color: var(--light-blue); font-size: 1.5em; margin: 0 0 10px; text-shadow: 0 0 5px var(--light-blue);">Ms. Nimali Silva</h4><p style="font-size: 1.2em; color: var(--text);">Academic Manager</p><p style="font-size: 1em; color: rgba(255, 255, 255, 0.8); font-style: italic;">M.Ed, B.Sc</p><div class="neon-border"></div></div>
+                </div>
+            </div>
+
+            <div class="team-section" style="margin: 60px auto; max-width: 1200px; padding: 40px;">
+                <h3 style="text-align: center; color: var(--light-blue); font-size: 2.5em; margin-bottom: 40px; text-shadow: 0 0 10px var(--light-blue);">Our Teachers</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                    <div class="team-card"><img src="path/to/teacher1.jpg" alt="Teacher 1"><h4 style="color: var(--light-blue); font-size: 1.5em; margin: 0 0 10px; text-shadow: 0 0 5px var(--light-blue);">Ms. Kumari Fernando</h4><p style="font-size: 1.2em; color: var(--text);">Sinhala & Literature</p><p style="font-size: 1em; color: rgba(255, 255, 255, 0.8); font-style: italic;">B.A., Dip. in Education</p><div class="neon-border"></div></div>
+                    <div class="team-card"><img src="path/to/teacher2.jpg" alt="Teacher 2"><h4 style="color: var(--light-blue); font-size: 1.5em; margin: 0 0 10px; text-shadow: 0 0 5px var(--light-blue);">Mr. Ravi Perera</h4><p style="font-size: 1.2em; color: var(--text);">Mathematics</p><p style="font-size: 1em; color: rgba(255, 255, 255, 0.8); font-style: italic;">M.Sc., B.Ed</p><div class="neon-border"></div></div>
+                    <div class="team-card"><img src="path/to/teacher3.jpg" alt="Teacher 3"><h4 style="color: var(--light-blue); font-size: 1.5em; margin: 0 0 10px; text-shadow: 0 0 5px var(--light-blue);">Ms. Anusha Wijesinghe</h4><p style="font-size: 1.2em; color: var(--text);">Science</p><p style="font-size: 1em; color: rgba(255, 255, 255, 0.8); font-style: italic;">B.Sc., PGDE</p><div class="neon-border"></div></div>
+                </div>
+            </div>
+
+            <div class="contact-section" style="margin: 60px auto; max-width: 900px; text-align: center; background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                <h3 style="color: var(--light-blue); font-size: 2em; margin-bottom: 20px;">Contact Us</h3>
+                <p style="font-size: 1.2em;"><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> <strong>Address:</strong> Walahanduwa, Galle, Sri Lanka</p>
+                <p style="font-size: 1.2em;"><i class="fas fa-phone" style="margin-right: 10px;"></i> <strong>Phone:</strong> <a href="https://wa.me/94766158341" target="_blank" style="color: var(--light-blue); text-decoration: none;">+94 766 158 341 (WhatsApp)</a></p>
+                <p style="font-size: 1.2em;"><i class="fas fa-envelope" style="margin-right: 10px;"></i> <strong>Email:</strong> <a href="mailto:info@shanexacademy.lk" style="color: var(--light-blue); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='var(--light-blue)'">info@shanexacademy.lk</a></p>
+                <div style="margin-top: 20px;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.8655661883747!2d80.19340161476402!3d6.078611495589429!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae177fb2d83c773%3A0x2e5c2e2e2e2e2e2e!2sWalahanduwa%2C%20Galle%2C%20Sri%20Lanka!5e0!3m2!1sen!2sus!4v1634567890123" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page">
+        <div class="login-container">
+            <h1>Shanex Academy Login</h1>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <button onclick="showStudentRegister()">Register as Student</button>
+            <p style="margin-top: 20px;">Leave blank to continue as a guest student</p>
+            <button onclick="backToHome()" style="background: none; border: none; color: var(--light-blue); text-decoration: underline; cursor: pointer;">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- Student Registration Page -->
+    <div id="student-register">
+        <div class="register-container">
+            <h1>Create Student Profile</h1>
+            <input type="text" id="new-username" placeholder="New Username">
+            <input type="password" id="new-password" placeholder="New Password">
+            <select id="level" onchange="toggleSubjectSelection()">
+                <option value="">Select Level</option>
+                <option value="OL">Ordinary Level (O/L)</option>
+                <option value="AL">Advanced Level (A/L)</option>
+            </select>
+            <div id="ol-subjects" style="display: none;">
+                <p style="color: var(--light-blue);">O/L Students study all 9 subjects:</p>
+                <p>Sinhala, English, Religion, History, Science, Maths, Commerce, Tamil, Arts</p>
+            </div>
+            <div id="al-streams" style="display: none;">
+                <select id="stream" onchange="updateALSubjects()">
+                    <option value="">Select Stream</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Bio">Bio</option>
+                    <option value="Maths">Maths</option>
+                </select>
+                <select id="subject1"><option value="">Select Subject 1</option></select>
+                <select id="subject2"><option value="">Select Subject 2</option></select>
+                <select id="subject3"><option value="">Select Subject 3</option></select>
+            </div>
+            <button onclick="registerStudent()">Register</button>
+            <button onclick="backToLogin()">Back</button>
+        </div>
+    </div>
+
+    <!-- Academy Page -->
+    <div id="academy-page">
+        <nav>
+            <div class="hamburger" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#ai-features">AI Features</a></li>
+                <li><a href="#lms">LMS</a></li>
+                <li><a href="#blogs">Blogs</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#students">Students</a></li>
+            </ul>
+        </nav>
+
+        <div id="home" class="section" data-aos="fade-up">
+            <div class="hero-container">
+                <img src="path/to/shanex-logo.png" alt="Shanex Academy Logo">
+                <h1>Welcome to Shanex Academy</h1>
+                <p>Learn Different, Lead Better</p>
+                <div class="hero-overlay"></div>
+            </div>
+        </div>
+
+                <div id="ai-features" class="section" data-aos="zoom-in">
+            <h2>AI Features for Students</h2>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Personalized Learning Paths</li>
+                <li><i class="fas fa-check-circle"></i> AI-Powered Doubt Resolution</li>
+                <li><i class="fas fa-check-circle"></i> Smart Study Schedulers</li>
+                <li><i class="fas fa-check-circle"></i> Real-Time Feedback on Assignments</li>
+                <li><i class="fas fa-check-circle"></i> AI Chat Assistants for Queries</li>
+            </ul>
+        </div>
+
+        <div id="lms" class="section" data-aos="fade-up">
+            <h2>Learning Management System</h2>
+            <h3>Latest Announcements</h3>
+            <p><strong>Upcoming Exam Dates:</strong> The final exams for all courses will be held next week. Please prepare accordingly.</p>
+            <p><strong>New Course:</strong> We are excited to announce the launch of our new course on Artificial Intelligence. Enroll now!</p>
+
+            <h3>Course Materials</h3>
+            <div id="owner-upload" style="margin-bottom: 20px; display: none;">
+                <input type="text" id="material-name" placeholder="Material Name" style="padding: 8px; margin-right: 10px;">
+                <input type="file" id="material-upload" accept=".pdf" onchange="uploadMaterial()">
+            </div>
+            <table id="materials-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Material Name</th>
+                        <th>File</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="materials-body"></tbody>
+            </table>
+            <div id="material-viewer" class="pdf-viewer"></div>
+
+            <h3>Assignments</h3>
+            <div id="owner-assignments" style="margin-bottom: 20px; display: none;">
+                <input type="text" id="assignment-name" placeholder="Assignment Name" style="padding: 8px; margin-right: 10px;">
+                <button onclick="addAssignment()" class="animated-button">Add Assignment</button>
+            </div>
+            <table id="assignments-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Assignment</th>
+                        <th>Student Submission</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="assignments-body"></tbody>
+            </table>
+            <div id="assignment-viewer" class="pdf-viewer"></div>
+
+            <h3>IQ Puzzle</h3>
+            <div id="quiz-section">
+                <p>Solve this puzzle: If the day after tomorrow is Wednesday, what day is it today?</p>
+                <input type="text" id="quiz-answer" placeholder="Your Answer">
+                <button onclick="checkQuizAnswer()" class="animated-button">Submit Answer</button>
+                <div id="quiz-result"></div>
+            </div>
+        </div>
+
+        <div id="blogs" class="section" data-aos="fade-up">
+            <h2>Latest Blogs</h2>
+            <div class="blog-post">
+                <h3>AI in Education: The Future is Now</h3>
+                <p>Discover how artificial intelligence is transforming the educational landscape with personalized learning experiences...</p>
+            </div>
+            <div class="blog-post">
+                <h3>Effective Study Techniques</h3>
+                <p>Learn proven strategies to enhance your study sessions and improve retention...</p>
+            </div>
+        </div>
+
+        <div id="students" class="section" data-aos="fade-up">
+            <h2>Registered Students</h2>
+            <button onclick="showAddStudentForm()" class="animated-button" style="margin-bottom: 20px;">Add Student</button>
+            <div id="add-student-form" style="display: none; margin-bottom: 20px;">
+                <input type="text" id="add-username" placeholder="Username">
+                <input type="password" id="add-password" placeholder="Password">
+                <button onclick="addStudent()">Add</button>
+                <button onclick="hideAddStudentForm()">Cancel</button>
+            </div>
+            <table id="students-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Level</th>
+                        <th>Subjects/Stream</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="students-body"></tbody>
+            </table>
+        </div>
+
+        <div id="chat-icon" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div id="chat-window">
+            <div class="chat-header">
+                <button onclick="toggleChat()">×</button>
+            </div>
+            <div id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Owner Credentials
+        const OWNER_USERNAME = "shanex_owner";
+        const OWNER_PASSWORD = "shanex2023";
+
+        // Student Profiles Storage
+        let students = JSON.parse(localStorage.getItem('students')) || {};
+        let userRole = 'student';
+        let currentUser = null;
+
+        // A/L Stream Subjects
+        const alSubjects = {
+            Arts: ["Sinhala", "Econ", "Music", "Logic", "ICT"],
+            Commerce: ["Econ", "Accounting", "Business Studies", "ICT"],
+            Tech: ["ICT", "ET", "SFT", "BST"],
+            Bio: ["Biology", "Chemistry", "Physics", "ICT", "Agri"],
+            Maths: ["Combined Maths", "Chemistry", "Physics", "ICT"]
+        };
+
+        // Page Navigation Functions
+        function showLoginPage() {
+            console.log("showLoginPage called");
+            document.getElementById('home-page').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+            document.getElementById('academy-page').classList.remove('active');
+            document.getElementById('student-register').classList.remove('active');
+            AOS.init({ duration: 1000 });
+        }
+
+        function backToHome() {
+            console.log("backToHome called");
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('student-register').classList.remove('active');
+            document.getElementById('academy-page').classList.remove('active');
+            document.getElementById('home-page').classList.add('active');
+            AOS.init({ duration: 1000 });
+        }
+
+        function showAcademyPage(message) {
+            console.log("showAcademyPage called with message:", message);
+            document.getElementById('home-page').classList.remove('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('student-register').classList.remove('active');
+            document.getElementById('academy-page').classList.add('active');
+            if (userRole === 'owner') {
+                document.getElementById('owner-upload').style.display = 'block';
+                document.getElementById('owner-assignments').style.display = 'block';
+            } else {
+                document.getElementById('owner-upload').style.display = 'none';
+                document.getElementById('owner-assignments').style.display = 'none';
+            }
+            alert(message);
+            updateMaterialsTable();
+            updateAssignmentsTable();
+            updateStudentsTable();
+            AOS.init({ duration: 1000 });
+        }
+
+        // Login Function
+        function login() {
+            console.log("login called");
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (username === OWNER_USERNAME && password === OWNER_PASSWORD) {
+                userRole = 'owner';
+                currentUser = username;
+                showAcademyPage("Welcome, Owner of Shanex Academy!");
+            } else if (students[username] && students[username].password === password) {
+                userRole = 'student';
+                currentUser = username;
+                showAcademyPage(`Welcome, Student ${username}!`);
+            } else {
+                userRole = 'student';
+                currentUser = 'Guest';
+                showAcademyPage("Welcome, Guest Student!");
+            }
+        }
+
+        function showStudentRegister() {
+            console.log("showStudentRegister called");
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('student-register').classList.add('active');
+        }
+
+        function backToLogin() {
+            console.log("backToLogin called");
+            document.getElementById('student-register').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+        }
+
+        function toggleSubjectSelection() {
+            const level = document.getElementById('level').value;
+            document.getElementById('ol-subjects').style.display = level === 'OL' ? 'block' : 'none';
+            document.getElementById('al-streams').style.display = level === 'AL' ? 'block' : 'none';
+            if (level !== 'AL') {
+                document.getElementById('stream').value = '';
+                updateALSubjects();
+            }
+        }
+
+        function updateALSubjects() {
+            const stream = document.getElementById('stream').value;
+            const subject1 = document.getElementById('subject1');
+            const subject2 = document.getElementById('subject2');
+            const subject3 = document.getElementById('subject3');
+            subject1.innerHTML = '<option value="">Select Subject 1</option>';
+            subject2.innerHTML = '<option value="">Select Subject 2</option>';
+            subject3.innerHTML = '<option value="">Select Subject 3</option>';
+
+            if (stream && alSubjects[stream]) {
+                alSubjects[stream].forEach(subject => {
+                    subject1.innerHTML += `<option value="${subject}">${subject}</option>`;
+                    subject2.innerHTML += `<option value="${subject}">${subject}</option>`;
+                    subject3.innerHTML += `<option value="${subject}">${subject}</option>`;
+                });
+            }
+        }
+
+        function registerStudent() {
+            const newUsername = document.getElementById('new-username').value.trim();
+            const newPassword = document.getElementById('new-password').value.trim();
+            const level = document.getElementById('level').value;
+
+            if (!newUsername || !newPassword || !level) {
+                alert("Please enter a username, password, and select a level!");
+                return;
+            }
+
+            if (students[newUsername] || newUsername === OWNER_USERNAME) {
+                alert("Username already taken!");
+                return;
+            }
+
+            let studentData = { password: newPassword, level: level };
+            if (level === 'OL') {
+                studentData.subjects = ["Sinhala", "English", "Religion", "History", "Science", "Maths", "Commerce", "Tamil", "Arts"];
+            } else if (level === 'AL') {
+                const stream = document.getElementById('stream').value;
+                const subject1 = document.getElementById('subject1').value;
+                const subject2 = document.getElementById('subject2').value;
+                const subject3 = document.getElementById('subject3').value;
+
+                if (!stream || !subject1 || !subject2 || !subject3) {
+                    alert("Please select a stream and 3 subjects!");
+                    return;
+                }
+                if (subject1 === subject2 || subject2 === subject3 || subject1 === subject3) {
+                    alert("Please select 3 different subjects!");
+                    return;
+                }
+
+                studentData.stream = stream;
+                studentData.subjects = [subject1, subject2, subject3];
+            }
+
+            students[newUsername] = studentData;
+            localStorage.setItem('students', JSON.stringify(students));
+            alert(`Student profile created for ${newUsername}! Please log in.`);
+            backToLogin();
+        }
+
+        // Navigation Menu
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // AI Chat
+        function toggleChat() {
+            const chatWindow = document.getElementById('chat-window');
+            chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                const msg = e.target.value;
+                document.getElementById('chat-messages').innerHTML += `<div class="user-msg">${msg}</div>`;
+                setTimeout(() => {
+                    const responses = ["How can I assist you today?", "Great question! Let me help."];
+                    const response = responses[Math.floor(Math.random() * 2)];
+                    document.getElementById('chat-messages').innerHTML += `<div class="ai-msg">${response}</div>`;
+                }, 500);
+                e.target.value = '';
+            }
+        });
+
+        // Document Management
+        let materials = [];
+        let assignments = [];
+
+        function uploadMaterial() {
+            if (userRole !== 'owner') return;
+            const fileInput = document.getElementById('material-upload');
+            const nameInput = document.getElementById('material-name');
+            const file = fileInput.files[0];
+            const name = nameInput.value.trim();
+            if (file && file.type === 'application/pdf' && name) {
+                materials.push({ name, file });
+                updateMaterialsTable();
+                fileInput.value = '';
+                nameInput.value = '';
+            }
+        }
+
+        function updateMaterialsTable() {
+            const tbody = document.getElementById('materials-body');
+            tbody.innerHTML = '';
+            materials.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>Course ${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.file.name}</td>
+                        <td>
+                            <button class="view-btn" onclick="viewMaterial(${index})">View</button>
+                            <button class="download-btn" onclick="downloadMaterial(${index})">Download</button>
+                            ${userRole === 'owner' ? `<button class="delete-btn" onclick="deleteMaterial(${index})">Delete</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function viewMaterial(index) {
+            const file = materials[index].file;
+            const viewer = document.getElementById('material-viewer');
+            const url = URL.createObjectURL(file);
+            viewer.innerHTML = `<iframe src="${url}" width="100%" height="100%"></iframe>`;
+        }
+
+        function downloadMaterial(index) {
+            const file = materials[index].file;
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function deleteMaterial(index) {
+            if (userRole !== 'owner') return;
+            materials.splice(index, 1);
+            updateMaterialsTable();
+            document.getElementById('material-viewer').innerHTML = '';
+        }
+
+        function addAssignment() {
+            if (userRole !== 'owner') return;
+            const nameInput = document.getElementById('assignment-name');
+            const name = nameInput.value.trim();
+            if (name) {
+                assignments.push({ name, submissions: [] });
+                updateAssignmentsTable();
+                nameInput.value = '';
+            }
+        }
+
+        function uploadStudentAssignment(index) {
+            if (userRole !== 'student') return;
+            const fileInput = document.getElementById(`student-upload-${index}`);
+            const file = fileInput.files[0];
+            if (file && file.type === 'application/pdf') {
+                assignments[index].submissions.push({ file, student: currentUser });
+                updateAssignmentsTable();
+                fileInput.value = '';
+            }
+        }
+
+        function updateAssignmentsTable() {
+            const tbody = document.getElementById('assignments-body');
+            tbody.innerHTML = '';
+            assignments.forEach((item, index) => {
+                const submissionText = item.submissions.length ? `${item.submissions.length} file(s)` : 'No submissions';
+                const studentActions = userRole === 'student' ? `<input type="file" id="student-upload-${index}" accept=".pdf" onchange="uploadStudentAssignment(${index})">` : '';
+                const ownerActions = userRole === 'owner' ? `<button class="delete-btn" onclick="deleteAssignment(${index})">Delete</button>` : '';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>Course ${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${submissionText} ${studentActions}</td>
+                        <td>
+                            ${item.submissions.length ? `<button class="view-btn" onclick="viewAssignment(${index})">View</button><button class="download-btn" onclick="downloadAssignment(${index})">Download</button>` : ''}
+                            ${ownerActions}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function viewAssignment(index) {
+            const files = assignments[index].submissions;
+            const viewer = document.getElementById('assignment-viewer');
+            viewer.innerHTML = '';
+            files.forEach((submission, i) => {
+                const url = URL.createObjectURL(submission.file);
+                viewer.innerHTML += `<div>File ${i + 1} by ${submission.student}: ${submission.file.name}</div><iframe src="${url}" width="100%" height="200px"></iframe>`;
+            });
+        }
+
+        function downloadAssignment(index) {
+            const files = assignments[index].submissions;
+            files.forEach((submission, i) => {
+                const url = URL.createObjectURL(submission.file);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${assignments[index].name}_submission_${submission.student}_${i + 1}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function deleteAssignment(index) {
+            if (userRole !== 'owner') return;
+            assignments.splice(index, 1);
+            updateAssignmentsTable();
+            document.getElementById('assignment-viewer').innerHTML = '';
+        }
+
+        // Quiz Function
+        function checkQuizAnswer() {
+            const answer = document.getElementById('quiz-answer').value.trim().toLowerCase();
+            const result = document.getElementById('quiz-result');
+            if (answer === 'monday') {
+                result.textContent = "Correct! Today is Monday.";
+            } else {
+                result.textContent = "Incorrect. Try again! Hint: The day after tomorrow is Wednesday.";
+            }
+        }
+
+        function showAddStudentForm() {
+            if (userRole !== 'owner') return;
+            document.getElementById('add-student-form').style.display = 'block';
+        }
+
+        function hideAddStudentForm() {
+            document.getElementById('add-student-form').style.display = 'none';
+        }
+
+        function addStudent() {
+            if (userRole !== 'owner') return;
+            const username = document.getElementById('add-username').value.trim();
+            const password = document.getElementById('add-password').value.trim();
+
+            if (!username || !password) {
+                alert("Please enter both a username and password!");
+                return;
+            }
+
+            if (students[username]) {
+                alert("Username already taken!");
+                return;
+            }
+
+            students[username] = { password, level: 'Guest', subjects: [] };
+            localStorage.setItem('students', JSON.stringify(students));
+            updateStudentsTable();
+            hideAddStudentForm();
+        }
+
+        function updateStudentsTable() {
+            const tbody = document.getElementById('students-body');
+            tbody.innerHTML = '';
+            Object.keys(students).forEach(username => {
+                const student = students[username];
+                const subjectsDisplay = student.level === 'OL' ? student.subjects.join(', ') : (student.stream ? `${student.stream}: ${student.subjects.join(', ')}` : 'N/A');
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${username}</td>
+                        <td>${student.password}</td>
+                        <td>${student.level}</td>
+                        <td>${subjectsDisplay}</td>
+                        <td>
+                            ${userRole === 'owner' ? `
+                                <button class="delete-btn" onclick="deleteStudent('${username}')">Delete</button>
+                                <button class="animated-button" onclick="changePassword('${username}')">Change Password</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteStudent(username) {
+            if (userRole !== 'owner') return;
+            delete students[username];
+            localStorage.setItem('students', JSON.stringify(students));
+            updateStudentsTable();
+        }
+
+        function changePassword(username) {
+            if (userRole !== 'owner') return;
+            const newPassword = prompt("Enter new password for " + username);
+            if (newPassword) {
+                students[username].password = newPassword;
+                localStorage.setItem('students', JSON.stringify(students));
+                updateStudentsTable();
+            }
+        }
+
+        // Initialize AOS on page load
+        window.onload = function() {
+            AOS.init({ duration: 1000 });
+        };
+    </script>
+</body>
+</html>
